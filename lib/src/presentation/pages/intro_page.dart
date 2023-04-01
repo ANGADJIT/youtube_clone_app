@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 import 'package:youtube_clone_app/src/utils/custom_media_query.dart';
+import 'package:youtube_clone_app/src/utils/media_manager.dart';
 import 'package:youtube_clone_app/src/utils/strings.dart';
 
 class IntroPage extends StatelessWidget {
@@ -19,7 +21,7 @@ class IntroPage extends StatelessWidget {
           borderRadius:
               BorderRadius.circular(CustomMediaQuery.makeRadius(context, .2)),
           child: Image.asset(
-            'assets/images/intro.jpg',
+            introPageAssetString,
             fit: BoxFit.cover,
           )
               .box
@@ -29,15 +31,32 @@ class IntroPage extends StatelessWidget {
         ),
 
         //
-        CustomMediaQuery.makeHeight(context, .01).heightBox,
+        CustomMediaQuery.makeHeight(context, .014).heightBox,
         youtubeSignInOrSignUpMessage.text
             .color(white)
             .bold
-            .size(CustomMediaQuery.makeTextSize(context, .5))
+            .size(CustomMediaQuery.makeTextSize(context, .52))
             .make(),
-        
+
         //
-        
+        const Spacer(),
+
+        //
+        TextButton(
+            onPressed: () async {},
+            child: signInWithEmail.text
+                .color(gray)
+                .size(CustomMediaQuery.makeTextSize(context, .5))
+                .make()),
+        TextButton(
+            onPressed: () {},
+            child: signUpWithEmail.text
+                .color(gray)
+                .italic
+                .bold
+                .size(CustomMediaQuery.makeTextSize(context, .5))
+                .make()),
+        CustomMediaQuery.makeHeight(context, .02).heightBox,
       ])).px(CustomMediaQuery.makeWidth(context, .07)),
     );
   }
