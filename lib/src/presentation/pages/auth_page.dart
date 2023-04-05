@@ -25,6 +25,10 @@ class _AuthPageState extends State<AuthPage> {
   // media manager
   final MediaManager _mediaManager = MediaManager();
 
+  // text controllers
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,13 +67,15 @@ class _AuthPageState extends State<AuthPage> {
 
           //
           CustomMediaQuery.makeHeight(context, .04).heightBox,
-          const AuthForm(),
+          AuthForm(
+            email: _email,
+            password: _password,
+          ),
 
           //
           CustomMediaQuery.makeHeight(context, .08).heightBox,
           AuthButton(
-            isSignIn: widget.isSignIn,
-          )
+              isSignIn: widget.isSignIn, email: _email, password: _password)
         ]),
       )).px(CustomMediaQuery.makeWidth(context, .06)),
     );

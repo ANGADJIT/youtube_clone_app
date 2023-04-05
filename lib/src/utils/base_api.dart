@@ -1,11 +1,16 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:dio/dio.dart';
 import 'cache_manager.dart';
 
 class BaseApi {
-  final Dio _dio = Dio(BaseOptions(baseUrl: FlutterConfig.get('API_URL')));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://192.168.1.8:8000/'));
+
+  // status codes
+  final int created = 201;
+  final int sucessful = 200;
+  final int forbidden = 403;
+  final int internalServer = 500;
 
   @protected
   Future<Response> get(

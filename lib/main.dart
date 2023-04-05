@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:youtube_clone_app/src/presentation/pages/auth_page.dart';
 import 'package:youtube_clone_app/src/presentation/pages/intro_page.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';

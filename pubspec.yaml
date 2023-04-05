@@ -25,6 +25,7 @@ dependencies:
   equatable: ^2.0.5
   image_picker: ^0.8.7+1
   font_awesome_flutter: ^10.4.0
+  dartz: ^0.10.1
 
 
 dev_dependencies:
