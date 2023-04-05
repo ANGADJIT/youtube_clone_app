@@ -30,6 +30,7 @@ class CustomLoading {
   static void dismiss() {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
+      _overlayEntry = null;
     }
   }
 }

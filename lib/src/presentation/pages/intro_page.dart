@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/presentation/pages/auth_page.dart';
+import 'package:youtube_clone_app/src/presentation/widgets/intro_image_widget.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 import 'package:youtube_clone_app/src/utils/custom_media_query.dart';
-import 'package:youtube_clone_app/src/utils/media_manager.dart';
 import 'package:youtube_clone_app/src/utils/strings.dart';
 
 class IntroPage extends StatelessWidget {
@@ -17,18 +17,7 @@ class IntroPage extends StatelessWidget {
           child: VStack([
         //
         CustomMediaQuery.makeHeight(context, .07).heightBox,
-        ClipRRect(
-          borderRadius:
-              BorderRadius.circular(CustomMediaQuery.makeRadius(context, .2)),
-          child: Image.asset(
-            introPageAssetString,
-            fit: BoxFit.cover,
-          )
-              .box
-              .size(CustomMediaQuery.makeWidth(context, .6),
-                  CustomMediaQuery.makeHeight(context, .12))
-              .make(),
-        ),
+        const IntroImageWidget(),
 
         //
         CustomMediaQuery.makeHeight(context, .014).heightBox,
@@ -43,13 +32,13 @@ class IntroPage extends StatelessWidget {
 
         //
         TextButton(
-            onPressed: () async {},
+            onPressed: () => _navigateToAuth(context: context, isSignIn: true),
             child: signInWithEmail.text
                 .color(gray)
                 .size(CustomMediaQuery.makeTextSize(context, .5))
                 .make()),
         TextButton(
-            onPressed: () {},
+            onPressed: () => _navigateToAuth(context: context),
             child: signUpWithEmail.text
                 .color(gray)
                 .italic
@@ -60,4 +49,9 @@ class IntroPage extends StatelessWidget {
       ])).px(CustomMediaQuery.makeWidth(context, .07)),
     );
   }
+
+  // auth navigation function
+  void _navigateToAuth(
+          {required BuildContext context, bool isSignIn = false}) =>
+      context.nextPage(AuthPage(isSignIn: isSignIn));
 }
