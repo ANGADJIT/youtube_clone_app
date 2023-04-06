@@ -1,4 +1,6 @@
-import 'package:dartz/dartz.dart';
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:youtube_clone_app/src/utils/base_api.dart';
 import 'package:youtube_clone_app/src/utils/exceptions.dart';
 
@@ -32,17 +34,15 @@ class AuthApi extends BaseApi {
           data: data,
           isDepended: false);
 
-      body = response.data;
-
       if (response.statusCode == created) {
-        body = response.data;
-      } else if (response.statusCode == forbidden) {
+        body = jsonEncode(response.data);
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == forbidden) {
         throw ServerException('Invalid username or password');
-      } else if (response.statusCode == internalServer) {
+      } else if (e.response?.statusCode == internalServer) {
         throw ServerException('Server is down');
       }
-    } catch (e) {
-      throw ServerException(e.toString());
     }
 
     return body;

@@ -50,14 +50,14 @@ class AuthButton extends StatelessWidget {
       if (_authCubit.state is LoggedIn) {
         final String token = (_authCubit.state as LoggedIn)
             .authLoginSession
-            .accesToken
+            .accessToken
             .substring(0, 10);
 
         CommonWidgets.showSnackbar(context, message: token);
       } else if (_authCubit.state is AuthError) {
-        final string =
+        final errorString =
             (_authCubit.state as AuthError).serverException.toString();
-        CommonWidgets.showSnackbar(context, message: 'Error');
+        CommonWidgets.showSnackbar(context, message: errorString);
       }
 
       CustomLoading.dismiss();

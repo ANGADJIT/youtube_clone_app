@@ -19,9 +19,13 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+  // global form key
+  final GlobalKey _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
         child: VStack([
       VxTextField(
           borderType: VxTextFieldBorderType.roundLine,

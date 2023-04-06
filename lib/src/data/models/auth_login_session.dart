@@ -1,27 +1,27 @@
 import 'dart:convert';
 
 class AuthLoginSession {
-  final String accesToken;
+  final String accessToken;
   final String createdAt;
 
   AuthLoginSession({
-    required this.accesToken,
+    required this.accessToken,
     required this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({'accesToken': accesToken});
-    result.addAll({'createdAt': createdAt});
+    result.addAll({'access_token': accessToken});
+    result.addAll({'created_at': createdAt});
 
     return result;
   }
 
   factory AuthLoginSession.fromMap(Map<String, dynamic> map) {
     return AuthLoginSession(
-      accesToken: map['accesToken'] ?? '',
-      createdAt: map['createdAt'] ?? '',
+      accessToken: map['access_token'] ?? '',
+      createdAt: map['created_at'] ?? '',
     );
   }
 

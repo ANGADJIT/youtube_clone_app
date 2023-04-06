@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'cache_manager.dart';
 
 class BaseApi {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://192.168.1.8:8000/'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://192.168.43.237:8000/'));
 
   // status codes
   final int created = 201;
