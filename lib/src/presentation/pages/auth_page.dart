@@ -29,6 +29,9 @@ class _AuthPageState extends State<AuthPage> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
+  // global form key
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,13 +72,17 @@ class _AuthPageState extends State<AuthPage> {
           CustomMediaQuery.makeHeight(context, .04).heightBox,
           AuthForm(
             email: _email,
+            formKey: _formKey,
             password: _password,
           ),
 
           //
           CustomMediaQuery.makeHeight(context, .08).heightBox,
           AuthButton(
-              isSignIn: widget.isSignIn, email: _email, password: _password)
+              formKey: _formKey,
+              isSignIn: widget.isSignIn,
+              email: _email,
+              password: _password)
         ]),
       )).px(CustomMediaQuery.makeWidth(context, .06)),
     );

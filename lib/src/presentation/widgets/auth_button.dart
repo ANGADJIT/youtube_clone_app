@@ -12,10 +12,13 @@ class AuthButton extends StatelessWidget {
       {super.key,
       this.isSignIn = false,
       required this.email,
-      required this.password});
+      required this.password,
+      required this.formKey});
+
   final bool isSignIn;
   final TextEditingController email;
   final TextEditingController password;
+  final GlobalKey<FormState> formKey;
 
   // auth cubit
   final AuthCubit _authCubit = AuthCubit();
@@ -41,26 +44,30 @@ class AuthButton extends StatelessWidget {
   }
 
   Future<void> _login(BuildContext context) async {
+    final bool isValid = formKey.currentState!.validate();
+
     final String username = email.text;
     final String pwd = password.text;
 
-    CustomLoading.showLoading(context);
+    if (isValid) {
+      CustomLoading.showLoading(context);
 
-    _authCubit.login(email: username, password: pwd).then((_) {
-      if (_authCubit.state is LoggedIn) {
-        final String token = (_authCubit.state as LoggedIn)
-            .authLoginSession
-            .accessToken
-            .substring(0, 10);
+      _authCubit.login(email: username, password: pwd).then((_) {
+        if (_authCubit.state is LoggedIn) {
+          final String token = (_authCubit.state as LoggedIn)
+              .authLoginSession
+              .accessToken
+              .substring(0, 10);
 
-        CommonWidgets.showSnackbar(context, message: token);
-      } else if (_authCubit.state is AuthError) {
-        final errorString =
-            (_authCubit.state as AuthError).serverException.toString();
-        CommonWidgets.showSnackbar(context, message: errorString);
-      }
+          CommonWidgets.showSnackbar(context, message: token);
+        } else if (_authCubit.state is AuthError) {
+          final errorString =
+              (_authCubit.state as AuthError).serverException.toString();
+          CommonWidgets.showSnackbar(context, message: errorString);
+        }
 
-      CustomLoading.dismiss();
-    });
+        CustomLoading.dismiss();
+      });
+    }
   }
 }
