@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:youtube_clone_app/src/utils/base_api.dart';
 import 'package:youtube_clone_app/src/utils/exceptions.dart';
@@ -39,6 +40,47 @@ class AuthApi extends BaseApi {
     } on DioError catch (e) {
       if (e.response?.statusCode == forbidden) {
         throw ServerException('Invalid username or password');
+      } else if (e.response?.statusCode == internalServer) {
+        throw ServerException('Server is down');
+      }
+    }
+
+    return body;
+  }
+
+  Future<String> register(
+      {required String email,
+      required String password,
+      required String channelName,
+      required String channelPhotoPath}) async {
+    String body = '';
+
+    try {
+      final Map<String, dynamic> data = {
+        'email': email,
+        'password': password,
+        'channel_name': channelName
+      };
+
+      final Map<String, dynamic> headers = {
+        'accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      };
+
+      final response = await post(
+          route: '$baseRoute/register',
+          headers: headers,
+          data: data,
+          isForm: true,
+          isDepended: false,
+          file: File(channelPhotoPath));
+
+      if (response.statusCode == 200) {
+        body = jsonEncode(response.data);
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == conflict) {
+        throw ServerException('User already exists with this email');
       } else if (e.response?.statusCode == internalServer) {
         throw ServerException('Server is down');
       }

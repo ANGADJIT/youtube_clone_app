@@ -9,3 +9,4 @@ String emailTextFieldHint = 'Email';
 String passwordTextFieldHint = 'Password';
 String signInTitle = 'Sign-In';
 String signUpTitle = 'Sign-Up';
+String channelNameTextFieldHint = 'Channel Name';

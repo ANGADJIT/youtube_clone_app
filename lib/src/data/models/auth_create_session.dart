@@ -12,16 +12,16 @@ class AuthCreateSession {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({'userId': userId});
-    result.addAll({'createdAt': createdAt});
+    result.addAll({'user_id': userId});
+    result.addAll({'created_at': createdAt});
 
     return result;
   }
 
   factory AuthCreateSession.fromMap(Map<String, dynamic> map) {
     return AuthCreateSession(
-      userId: map['userId'] ?? '',
-      createdAt: map['createdAt'] ?? '',
+      userId: map['user_id'] ?? '',
+      createdAt: map['created_at'] ?? '',
     );
   }
 

@@ -11,6 +11,7 @@ class BaseApi {
   final int sucessful = 200;
   final int forbidden = 403;
   final int internalServer = 500;
+  final int conflict = 409;
 
   @protected
   Future<Response> get(
@@ -35,7 +36,7 @@ class BaseApi {
       Map<String, dynamic>? data,
       bool isDepended = true}) async {
     if (isDepended) {
-      headers['authorization'] = CacheManager.token;
+      headers['authorization'] = 'Bearer ${CacheManager.token}';
     }
 
     FormData? formData;
@@ -49,7 +50,7 @@ class BaseApi {
     _dio.options.headers = headers;
 
     if (isForm) {
-      _dio.post(route, data: formData);
+      return _dio.post(route, data: formData);
     }
 
     return _dio.post(route, data: data);

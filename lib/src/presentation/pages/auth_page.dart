@@ -28,6 +28,7 @@ class _AuthPageState extends State<AuthPage> {
   // text controllers
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _channelName = TextEditingController();
 
   // global form key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -73,6 +74,7 @@ class _AuthPageState extends State<AuthPage> {
           AuthForm(
             email: _email,
             formKey: _formKey,
+            channelName: _channelName,
             password: _password,
           ),
 
@@ -82,6 +84,8 @@ class _AuthPageState extends State<AuthPage> {
               formKey: _formKey,
               isSignIn: widget.isSignIn,
               email: _email,
+              channelName: _channelName,
+              channelPhotoPath: _imagePath,
               password: _password)
         ]),
       )).px(CustomMediaQuery.makeWidth(context, .06)),

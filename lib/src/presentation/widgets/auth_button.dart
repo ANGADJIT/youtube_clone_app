@@ -13,11 +13,15 @@ class AuthButton extends StatelessWidget {
       this.isSignIn = false,
       required this.email,
       required this.password,
+      this.channelName,
+      this.channelPhotoPath,
       required this.formKey});
 
   final bool isSignIn;
   final TextEditingController email;
   final TextEditingController password;
+  final TextEditingController? channelName;
+  final String? channelPhotoPath;
   final GlobalKey<FormState> formKey;
 
   // auth cubit
@@ -26,7 +30,7 @@ class AuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-        onPressed: () => _login(context),
+        onPressed: () => isSignIn ? _login(context) : _register(context),
         child: VxBox(
                 child: (isSignIn ? signInTitle : signUpTitle)
                     .text
@@ -54,6 +58,7 @@ class AuthButton extends StatelessWidget {
 
       _authCubit.login(email: username, password: pwd).then((_) {
         if (_authCubit.state is LoggedIn) {
+          // TODO: to home page navigation logic
           final String token = (_authCubit.state as LoggedIn)
               .authLoginSession
               .accessToken
@@ -66,6 +71,41 @@ class AuthButton extends StatelessWidget {
           CommonWidgets.showSnackbar(context, message: errorString);
         }
 
+        CustomLoading.dismiss();
+      });
+    }
+  }
+
+  Future<void> _register(BuildContext context) async {
+    final bool check = formKey.currentState!.validate();
+
+    if (channelPhotoPath == null) {
+      CommonWidgets.showSnackbar(context,
+          message: 'Choose a channel profile photo');
+      return;
+    }
+
+    if (check) {
+      CustomLoading.showLoading(context);
+
+      _authCubit
+          .register(
+              email: email.text,
+              password: password.text,
+              channelName: channelName!.text,
+              channelPhotoPath: channelPhotoPath!)
+          .then((value) {
+        if (_authCubit.state is AuthRegistered) {
+          final String userId =
+              (_authCubit.state as AuthRegistered).authCreateSession.userId;
+
+          CommonWidgets.showSnackbar(context, message: userId);
+        } else if (_authCubit.state is AuthError) {
+          final errorString =
+              (_authCubit.state as AuthError).serverException.toString();
+          CommonWidgets.showSnackbar(context, message: errorString);
+        }
+        
         CustomLoading.dismiss();
       });
     }

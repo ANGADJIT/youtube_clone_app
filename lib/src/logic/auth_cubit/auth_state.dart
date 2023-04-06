@@ -20,6 +20,17 @@ class LoggedIn extends AuthState {
   List<Object> get props => [authLoginSession];
 }
 
+class AuthRegistered extends AuthState {
+  final AuthCreateSession authCreateSession;
+
+  const AuthRegistered({
+    required this.authCreateSession,
+  });
+
+  @override
+  List<Object> get props => [authCreateSession];
+}
+
 class AuthError extends AuthState {
   final ServerException serverException;
 

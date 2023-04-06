@@ -10,10 +10,12 @@ class AuthForm extends StatefulWidget {
       this.isSignIn = false,
       required this.email,
       required this.formKey,
-      required this.password});
+      required this.password,
+      required this.channelName});
   final bool isSignIn;
   final TextEditingController email;
   final TextEditingController password;
+  final TextEditingController channelName;
   final GlobalKey<FormState> formKey;
 
   @override
@@ -67,7 +69,28 @@ class _AuthFormState extends State<AuthForm> {
               isPassword: true,
               cursorColor: white,
               keyboardType: TextInputType.visiblePassword,
-              obscureText: true)
+              obscureText: true),
+          widget.isSignIn
+              ? Container()
+              : CustomMediaQuery.makeHeight(context, .03).heightBox,
+          widget.isSignIn
+              ? Container()
+              : VxTextField(
+                  borderType: VxTextFieldBorderType.roundLine,
+                  controller: widget.channelName,
+                  borderColor: white,
+                  hint: channelNameTextFieldHint,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Channel name required';
+                    }
+
+                    return null;
+                  },
+                  style: TextStyle(color: white),
+                  hintStyle: TextStyle(color: gray),
+                  cursorColor: white,
+                  obscureText: true)
         ]));
   }
 }
