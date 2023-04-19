@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
-import 'package:youtube_clone_app/src/presentation/pages/intro_page.dart';
+import 'package:youtube_clone_app/src/utils/api_endpoint_page.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterConfig.loadEnvVariables();
 
   CacheManager.init();
 
@@ -21,6 +19,6 @@ class YoutubeCloneApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(backgroundColor: black, fontFamily: 'Lato'),
-        home: const IntroPage());
+        home: APIEndpointPage());
   }
 }

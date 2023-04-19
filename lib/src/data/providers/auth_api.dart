@@ -42,6 +42,8 @@ class AuthApi extends BaseApi {
         throw ServerException('Invalid username or password');
       } else if (e.response?.statusCode == internalServer) {
         throw ServerException('Server is down');
+      } else {
+        throw ServerException(e.toString());
       }
     }
 
@@ -57,7 +59,7 @@ class AuthApi extends BaseApi {
 
     try {
       final Map<String, dynamic> data = {
-        'email': email,
+        'username': email,
         'password': password,
         'channel_name': channelName
       };

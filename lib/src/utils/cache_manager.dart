@@ -21,8 +21,14 @@ class CacheManager {
     await _sharedPreferences?.setString('token', token);
   }
 
+  static cacheBaseHost(String host) async {
+    await _sharedPreferences?.setString('API_HOST', host);
+  }
+
   // getters for cache data
   static String? get userId => _sharedPreferences?.getString('user_id');
 
   static String? get token => _sharedPreferences?.getString('token');
+
+  static String? get apiHost => _sharedPreferences?.getString('API_HOST');
 }

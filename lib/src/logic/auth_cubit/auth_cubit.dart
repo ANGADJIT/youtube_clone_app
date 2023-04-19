@@ -32,7 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
         channelName: channelName,
         channelPhotoPath: channelPhotoPath);
 
-    result.fold((e) => AuthError(serverException: e),
+    result.fold((e) => emit(AuthError(serverException: e)),
         (r) => AuthRegistered(authCreateSession: r));
   }
 }

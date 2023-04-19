@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/data/providers/auth_api.dart';
 import 'package:youtube_clone_app/src/logic/auth_cubit/auth_cubit.dart';
+import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 import 'package:youtube_clone_app/src/utils/common_widgets.dart';
 import 'package:youtube_clone_app/src/utils/custom_loading.dart';
@@ -105,7 +108,7 @@ class AuthButton extends StatelessWidget {
               (_authCubit.state as AuthError).serverException.toString();
           CommonWidgets.showSnackbar(context, message: errorString);
         }
-        
+
         CustomLoading.dismiss();
       });
     }

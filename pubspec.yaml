@@ -16,7 +16,6 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # *YOUTUBE_CLONE_APP*
-  flutter_config: ^2.0.0
   velocity_x:
   shared_preferences: ^2.0.18
   web_socket_channel: ^2.3.0

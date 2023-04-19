@@ -76,6 +76,7 @@ class _AuthPageState extends State<AuthPage> {
             formKey: _formKey,
             channelName: _channelName,
             password: _password,
+            isSignIn: widget.isSignIn,
           ),
 
           //

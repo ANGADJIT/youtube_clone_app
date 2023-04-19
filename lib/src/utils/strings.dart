@@ -10,3 +10,6 @@ String passwordTextFieldHint = 'Password';
 String signInTitle = 'Sign-In';
 String signUpTitle = 'Sign-Up';
 String channelNameTextFieldHint = 'Channel Name';
+String apiEndpointTextFieldHint = 'API Host';
+String addUrlButtonText = 'Add Host';
+String usePreviousButtonText = 'Use Previous';
