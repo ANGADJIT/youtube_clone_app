@@ -89,8 +89,7 @@ class _AuthFormState extends State<AuthForm> {
                   },
                   style: TextStyle(color: white),
                   hintStyle: TextStyle(color: gray),
-                  cursorColor: white,
-                  obscureText: true)
+                  cursorColor: white)
         ]));
   }
 }

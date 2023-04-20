@@ -58,8 +58,8 @@ class AuthApi extends BaseApi {
     String body = '';
 
     try {
-      final Map<String, dynamic> data = {
-        'username': email,
+      final Map<String, dynamic> params = {
+        'email': email,
         'password': password,
         'channel_name': channelName
       };
@@ -72,7 +72,8 @@ class AuthApi extends BaseApi {
       final response = await post(
           route: '$baseRoute/register',
           headers: headers,
-          data: data,
+          data: {},
+          params: params,
           isForm: true,
           isDepended: false,
           file: File(channelPhotoPath));

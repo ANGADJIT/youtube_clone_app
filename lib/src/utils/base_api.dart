@@ -34,6 +34,7 @@ class BaseApi {
       required Map<String, dynamic> headers,
       File? file,
       bool isForm = false,
+      Map<String, dynamic>? params,
       Map<String, dynamic>? data,
       bool isDepended = true}) async {
     if (isDepended) {
@@ -51,9 +52,9 @@ class BaseApi {
     _dio.options.headers = headers;
 
     if (isForm) {
-      return _dio.post(route, data: formData);
+      return _dio.post(route, data: formData, queryParameters: params);
     }
 
-    return _dio.post(route, data: data);
+    return _dio.post(route, data: data, queryParameters: params);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:youtube_clone_app/src/data/providers/auth_api.dart';
 import 'package:youtube_clone_app/src/logic/auth_cubit/auth_cubit.dart';
+import 'package:youtube_clone_app/src/presentation/pages/home.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 import 'package:youtube_clone_app/src/utils/common_widgets.dart';
@@ -61,13 +62,7 @@ class AuthButton extends StatelessWidget {
 
       _authCubit.login(email: username, password: pwd).then((_) {
         if (_authCubit.state is LoggedIn) {
-          // TODO: to home page navigation logic
-          final String token = (_authCubit.state as LoggedIn)
-              .authLoginSession
-              .accessToken
-              .substring(0, 10);
-
-          CommonWidgets.showSnackbar(context, message: token);
+          context.nextAndRemoveUntilPage(const Home());
         } else if (_authCubit.state is AuthError) {
           final errorString =
               (_authCubit.state as AuthError).serverException.toString();
