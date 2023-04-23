@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/presentation/pages/home.dart';
 import 'package:youtube_clone_app/src/presentation/pages/intro_page.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
@@ -33,17 +34,35 @@ class APIEndpointPage extends StatelessWidget {
         //
         CustomMediaQuery.makeHeight(context, .09).heightBox,
         OutlinedButton(
-                onPressed: () => {
-                      CacheManager.cacheBaseHost(_host.text),
-                      context.nextReplacementPage(const IntroPage())
-                    },
+                onPressed: () {
+                  CacheManager.cacheBaseHost(_host.text);
+                  context.nextReplacementPage(const IntroPage());
+
+                  final accessToken = CacheManager.token;
+
+                  if (accessToken != null) {
+                    context.nextAndRemoveUntilPage(const Home());
+                  } else {
+                    context.nextAndRemoveUntilPage(const IntroPage());
+                  }
+                },
                 child: addUrlButtonText.text.make())
             .centered(),
         OutlinedButton(
-                onPressed: () => context.nextReplacementPage(const IntroPage()),
+                onPressed: () => _checkAuth(context),
                 child: usePreviousButtonText.text.make())
             .centered(),
       ]).px(CustomMediaQuery.makeWidth(context, .04)))),
     );
+  }
+
+  void _checkAuth(BuildContext context) {
+    final accessToken = CacheManager.token;
+
+    if (accessToken != null) {
+      context.nextAndRemoveUntilPage(const Home());
+    } else {
+      context.nextAndRemoveUntilPage(const IntroPage());
+    }
   }
 }

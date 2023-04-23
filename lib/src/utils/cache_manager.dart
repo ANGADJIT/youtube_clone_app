@@ -17,12 +17,16 @@ class CacheManager {
     await _sharedPreferences?.setString('user_id', userId);
   }
 
-  static cacheToken(String token) async {
+  static void cacheToken(String token) async {
     await _sharedPreferences?.setString('token', token);
   }
 
-  static cacheBaseHost(String host) async {
+  static void cacheBaseHost(String host) async {
     await _sharedPreferences?.setString('API_HOST', host);
+  }
+
+  static void deleteToken() async {
+    await _sharedPreferences?.remove('token');
   }
 
   // getters for cache data

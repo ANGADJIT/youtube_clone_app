@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:youtube_clone_app/src/data/providers/auth_api.dart';
 import 'package:youtube_clone_app/src/logic/auth_cubit/auth_cubit.dart';
+import 'package:youtube_clone_app/src/presentation/pages/auth_page.dart';
 import 'package:youtube_clone_app/src/presentation/pages/home.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
@@ -62,6 +61,13 @@ class AuthButton extends StatelessWidget {
 
       _authCubit.login(email: username, password: pwd).then((_) {
         if (_authCubit.state is LoggedIn) {
+          // cache access_token
+
+          final String accessToken =
+              (_authCubit.state as LoggedIn).authLoginSession.accessToken;
+
+          CacheManager.cacheToken(accessToken);
+
           context.nextAndRemoveUntilPage(const Home());
         } else if (_authCubit.state is AuthError) {
           final errorString =
@@ -92,12 +98,18 @@ class AuthButton extends StatelessWidget {
               password: password.text,
               channelName: channelName!.text,
               channelPhotoPath: channelPhotoPath!)
-          .then((value) {
+          .then((value) async {
         if (_authCubit.state is AuthRegistered) {
           final String userId =
               (_authCubit.state as AuthRegistered).authCreateSession.userId;
 
-          CommonWidgets.showSnackbar(context, message: userId);
+          // cache user id
+          CacheManager.cacheUserId(userId);
+
+          // navigate to login
+          context.nextAndRemoveUntilPage(const AuthPage(
+            isSignIn: true,
+          ));
         } else if (_authCubit.state is AuthError) {
           final errorString =
               (_authCubit.state as AuthError).serverException.toString();
