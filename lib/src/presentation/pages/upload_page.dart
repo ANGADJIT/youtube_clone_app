@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:youtube_clone_app/src/data/providers/raw_video_api.dart';
 import 'package:youtube_clone_app/src/presentation/widgets/upload_details_form.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
@@ -16,7 +18,6 @@ import 'package:youtube_clone_app/src/utils/media_manager.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_clone_app/src/utils/uppercase_textinputfromatter.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
@@ -38,8 +39,6 @@ class _UploadPageState extends State<UploadPage> {
 
   String? _videoPath;
 
-  final _videoTypeControl = TextEditingController();
-
   // media manager
   final MediaManager _mediaManager = MediaManager();
 
@@ -54,13 +53,6 @@ class _UploadPageState extends State<UploadPage> {
     'HEALTH_CARE'
   ];
   WebSocketChannel? _uploadSocket;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // _connectToSocket();
-  }
 
   @override
   void dispose() {
@@ -132,7 +124,7 @@ class _UploadPageState extends State<UploadPage> {
         // upload button
         CustomMediaQuery.makeHeight(context, .44).heightBox,
         MaterialButton(
-          onPressed: _uploadMedia,
+          onPressed: _uploadVideo,
           child: VxBox(
                   child: 'Upload Video'
                       .text
@@ -179,22 +171,20 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   bool _validate() {
-    final check = _formKey.currentState!.validate();
+    _formKey.currentState!.validate();
 
-    if (check) {
-      final String type = _videoType.text;
+    final String type = _videoType.text;
 
-      if (!_videoTypes.contains(type)) {
-        CommonWidgets.showSnackbar(context, message: 'Video type is invalid');
+    if (!_videoTypes.contains(type)) {
+      CommonWidgets.showSnackbar(context, message: 'Video type is invalid');
 
-        return false;
-      }
+      return false;
+    }
 
-      if (_videoPath == null) {
-        CommonWidgets.showSnackbar(context, message: 'Choose A Video');
+    if (_videoPath == null) {
+      CommonWidgets.showSnackbar(context, message: 'Choose A Video');
 
-        return false;
-      }
+      return false;
     }
 
     return true;
@@ -203,7 +193,8 @@ class _UploadPageState extends State<UploadPage> {
   void _connectToSocket() async {
     final Uri uri =
         Uri.parse('ws://${CacheManager.apiHost}:8000/videos/upload');
-    _uploadSocket = WebSocketChannel.connect(uri);
+    _uploadSocket = IOWebSocketChannel.connect(uri,
+        headers: {'Authorization': CacheManager.token});
   }
 
   Future<Uint8List> _getThumbnail() async {
@@ -214,6 +205,15 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future<Map<String, String>> _uploadMedia() async {
+    // create a check
+    final resolustion = _chewieController!.videoPlayerController.value.size;
+
+    if (resolustion.height > 1080 || resolustion.width > 1080) {
+      CommonWidgets.showSnackbar(context,
+          message: 'Max Resolution can be 1080P');
+      return {};
+    }
+
     CustomLoading.showLoading(context);
 
     final Uint8List thumbnail = await _getThumbnail();
@@ -228,5 +228,33 @@ class _UploadPageState extends State<UploadPage> {
       'thumbnail_upload_key': thumbnailUploadKey,
       'video_upload_key': videoUploadKey
     };
+  }
+
+  Future<void> _uploadVideo() async {
+    final bool check = _validate();
+
+    if (check) {
+      final Map<String, String> data = await _uploadMedia();
+
+      if (data.isEmpty) {
+        return;
+      }
+
+      // add more data to it
+      data['video_name'] = _title.text;
+      data['video_type'] = _videoType.text;
+      data['description'] = _description.text;
+
+      final String jsonString = jsonEncode(data);
+
+      _connectToSocket();
+
+      _uploadSocket!.sink.add(jsonString);
+
+      // ignore: use_build_context_synchronously
+      CustomLoading.showLoading(context);
+      _uploadSocket!.stream
+          .listen((event) {}, onDone: () => CustomLoading.dismiss());
+    }
   }
 }
