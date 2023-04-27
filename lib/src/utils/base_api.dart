@@ -18,6 +18,7 @@ class BaseApi {
   Future<Response> get(
       {required String route,
       required Map<String, dynamic> headers,
+      Map<String, dynamic>? queryParameters,
       bool isDepended = true}) async {
     if (isDepended) {
       headers['authorization'] = 'Bearer ${CacheManager.token}';
@@ -25,7 +26,7 @@ class BaseApi {
 
     _dio.options.headers = headers;
 
-    return await _dio.get(route);
+    return await _dio.get(route, queryParameters: queryParameters);
   }
 
   @protected

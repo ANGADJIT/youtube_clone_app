@@ -31,4 +31,21 @@ class CommonWidgets {
     // show snackbar
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  static loadImage(BuildContext context, Future future) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircleAvatar(
+            backgroundColor: blue,
+          );
+        }
+
+        return CircleAvatar(
+          backgroundImage: NetworkImage(snapshot.data!),
+        );
+      },
+    );
+  }
 }
