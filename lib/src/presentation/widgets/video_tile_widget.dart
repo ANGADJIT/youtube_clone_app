@@ -11,13 +11,11 @@ class VideoTileWidget extends StatelessWidget {
       required this.uri,
       required this.userId,
       required this.title,
-      required this.channelName,
       required this.isFirstTile});
   final String uri;
   final String userId;
   final String title;
   final bool isFirstTile;
-  final String channelName;
 
   final VideosApi _videosApi = VideosApi();
 
@@ -38,10 +36,12 @@ class VideoTileWidget extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return VStack([
+              const Spacer(),
               CircularProgressIndicator(
                 strokeWidth: 3.4,
                 color: red,
-              ).centered()
+              ).centered(),
+              const Spacer(),
             ]);
           }
 
@@ -59,12 +59,25 @@ class VideoTileWidget extends StatelessWidget {
         leading: CommonWidgets.loadImage(
             context, _videosApi.getChannelProfile(userId)),
         title: title.text.color(white).light.make(),
-        subtitle: VxBox()
-            .size(CustomMediaQuery.makeWidth(context, .1),
-                CustomMediaQuery.makeHeight(context, .01))
-            .color(darkGray)
-            .make()
-            .shimmer(showAnimation: true),
+        subtitle: FutureBuilder<String>(
+          future: _videosApi.getChannelName(userId),
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              VxBox()
+                  .size(CustomMediaQuery.makeWidth(context, .1),
+                      CustomMediaQuery.makeHeight(context, .01))
+                  .color(darkGray)
+                  .make()
+                  .shimmer(showAnimation: true);
+            }
+
+            if (snapshot.hasData) {
+              return snapshot.data!.text.color(gray).light.make();
+            }
+
+            return Container();
+          }),
+        ),
       ),
 
       Divider(

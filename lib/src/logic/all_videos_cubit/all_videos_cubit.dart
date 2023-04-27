@@ -11,8 +11,23 @@ class AllVideosCubit extends Cubit<AllVideosState> {
 
   final VideosRepository _videosRepository = VideosRepository();
 
-  void getAllVideo() async {
+  void getAllVideos() async {
     final result = await _videosRepository.getAllVideos();
+
+    result.fold((e) => emit(AllVideosError(serverException: e)),
+        (videos) => emit(AllVideosLoaded(videos: videos)));
+  }
+
+  void getSubscriptionVideos() async {
+    final result = await _videosRepository.getSubscriptionVideos();
+
+    result.fold((e) => emit(AllVideosError(serverException: e)),
+        (videos) => emit(AllVideosLoaded(videos: videos)));
+  }
+
+  void searchVideos(String searchPattern) async {
+    emit(AllVideosLoading());
+    final result = await _videosRepository.searchVideos(searchPattern);
 
     result.fold((e) => emit(AllVideosError(serverException: e)),
         (videos) => emit(AllVideosLoaded(videos: videos)));

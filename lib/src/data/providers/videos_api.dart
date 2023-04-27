@@ -71,6 +71,28 @@ class VideosApi extends BaseApi {
     return url;
   }
 
+  Future<String> getChannelName(String userId) async {
+    String channelName = '';
+
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      final Response response = await get(
+        route: '$majorRoute/channel_name/$userId',
+        headers: headers,
+        isDepended: true,
+      );
+
+      if (response.statusCode == 200) {
+        channelName = response.data['channel_name'];
+      }
+    } catch (e) {
+      throw ServerException('Something went wrong');
+    }
+
+    return channelName;
+  }
+
   Future<String> getAllVideos() async {
     String body = '';
 
@@ -82,6 +104,51 @@ class VideosApi extends BaseApi {
 
       if (response.statusCode == 200) {
         body = jsonEncode(response.data);
+      }
+    } catch (e) {
+      throw ServerException('Something went wrong');
+    }
+
+    return body;
+  }
+
+  Future<String> getSubscriptionVideos() async {
+    String body = '';
+
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      final Response response = await get(
+          route: '$majorRoute/subscription_videos',
+          headers: headers,
+          isDepended: true);
+
+      if (response.statusCode == 200) {
+        body = jsonEncode(response.data);
+      }
+    } catch (e) {
+      throw ServerException('Something went wrong');
+    }
+
+    return body;
+  }
+
+  Future<String> searchVideos(String searchPattern) async {
+    String body = '';
+
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      if (searchPattern.isNotEmpty) {
+        final Response response = await get(
+            route: '$majorRoute/search',
+            headers: headers,
+            isDepended: true,
+            queryParameters: {'search_pattern': searchPattern});
+
+        if (response.statusCode == 200) {
+          body = jsonEncode(response.data);
+        }
       }
     } catch (e) {
       throw ServerException('Something went wrong');

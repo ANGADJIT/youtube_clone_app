@@ -23,4 +23,39 @@ class VideosRepository {
 
     return right(videos);
   }
+
+  Future<Either<ServerException, List<Video>>> getSubscriptionVideos() async {
+    List<Video> videos = [];
+
+    try {
+      final String body = await _videosApi.getSubscriptionVideos();
+      final rawVideos = jsonDecode(body);
+
+      for (var video in rawVideos) {
+        videos.add(Video.fromMap(video));
+      }
+    } catch (e) {
+      return left(ServerException(e.toString()));
+    }
+
+    return right(videos);
+  }
+
+  Future<Either<ServerException, List<Video>>> searchVideos(
+      String searchPattern) async {
+    List<Video> videos = [];
+
+    try {
+      final String body = await _videosApi.searchVideos(searchPattern);
+      final rawVideos = jsonDecode(body);
+
+      for (var video in rawVideos) {
+        videos.add(Video.fromMap(video));
+      }
+    } catch (e) {
+      return left(ServerException(e.toString()));
+    }
+
+    return right(videos);
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/logic/all_videos_cubit/all_videos_cubit.dart';
 import 'package:youtube_clone_app/src/presentation/pages/home.dart';
 import 'package:youtube_clone_app/src/presentation/pages/intro_page.dart';
 import 'package:youtube_clone_app/src/utils/cache_manager.dart';
@@ -41,7 +43,10 @@ class APIEndpointPage extends StatelessWidget {
                   final accessToken = CacheManager.token;
 
                   if (accessToken != null) {
-                    context.nextAndRemoveUntilPage(const Home());
+                    context.nextAndRemoveUntilPage(BlocProvider(
+                      create: (context) => AllVideosCubit(),
+                      child: const Home(),
+                    ));
                   } else {
                     context.nextAndRemoveUntilPage(const IntroPage());
                   }
@@ -60,7 +65,10 @@ class APIEndpointPage extends StatelessWidget {
     final accessToken = CacheManager.token;
 
     if (accessToken != null) {
-      context.nextAndRemoveUntilPage(const Home());
+      context.nextAndRemoveUntilPage(BlocProvider(
+        create: (context) => AllVideosCubit(),
+        child: const Home(),
+      ));
     } else {
       context.nextAndRemoveUntilPage(const IntroPage());
     }

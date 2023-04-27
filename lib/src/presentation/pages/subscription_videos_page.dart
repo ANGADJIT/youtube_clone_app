@@ -5,19 +5,19 @@ import 'package:youtube_clone_app/src/logic/all_videos_cubit/all_videos_cubit.da
 import 'package:youtube_clone_app/src/presentation/widgets/video_tile_widget.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 
-class VideosPage extends StatefulWidget {
-  const VideosPage({super.key});
+class SubscriptionVideos extends StatefulWidget {
+  const SubscriptionVideos({super.key});
 
   @override
-  State<VideosPage> createState() => _VideosPageState();
+  State<SubscriptionVideos> createState() => SubscriptionVideosState();
 }
 
-class _VideosPageState extends State<VideosPage> {
+class SubscriptionVideosState extends State<SubscriptionVideos> {
   @override
   void initState() {
     super.initState();
 
-    context.read<AllVideosCubit>().getAllVideos();
+    context.read<AllVideosCubit>().getSubscriptionVideos();
   }
 
   @override

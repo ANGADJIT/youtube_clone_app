@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/logic/all_videos_cubit/all_videos_cubit.dart';
 import 'package:youtube_clone_app/src/logic/auth_cubit/auth_cubit.dart';
 import 'package:youtube_clone_app/src/presentation/pages/auth_page.dart';
 import 'package:youtube_clone_app/src/presentation/pages/home.dart';
@@ -68,7 +70,10 @@ class AuthButton extends StatelessWidget {
 
           CacheManager.cacheToken(accessToken);
 
-          context.nextAndRemoveUntilPage(const Home());
+          context.nextAndRemoveUntilPage(BlocProvider(
+            create: (context) => AllVideosCubit(),
+            child: const Home(),
+          ));
         } else if (_authCubit.state is AuthError) {
           final errorString =
               (_authCubit.state as AuthError).serverException.toString();
