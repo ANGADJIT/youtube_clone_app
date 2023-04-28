@@ -49,6 +49,27 @@ class VideosApi extends BaseApi {
     return url;
   }
 
+  Future<String> getVideo(String uri) async {
+    String url = '';
+
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    final Map<String, dynamic> data = {'object_uri': uri, 'for_video': true};
+
+    try {
+      final Response response = await post(
+          route: '/link', headers: headers, isDepended: true, data: data);
+
+      if (response.statusCode == 200) {
+        url = response.data['url'];
+      }
+    } catch (e) {
+      throw ServerException('Something went wrong');
+    }
+
+    return url;
+  }
+
   Future<String> getChannelProfile(String userId) async {
     String url = '';
 
