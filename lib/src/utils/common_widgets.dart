@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:youtube_clone_app/src/presentation/pages/intro_page.dart';
+import 'package:youtube_clone_app/src/utils/cache_manager.dart';
 import 'package:youtube_clone_app/src/utils/colors.dart';
 import 'package:youtube_clone_app/src/utils/custom_media_query.dart';
 
@@ -39,7 +41,11 @@ class CommonWidgets {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircleAvatar(
             backgroundColor: blue,
-          );
+          ).onTap(() {
+            CacheManager.deleteToken();
+
+            context.nextAndRemoveUntilPage(const IntroPage());
+          });
         }
 
         return CircleAvatar(

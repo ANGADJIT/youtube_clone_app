@@ -39,12 +39,27 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      appBar: CustomAppBar().call(
-        context,
-        title: youtubeTitle,
-        isHome: false,
-        allVideosCubit: context.read<AllVideosCubit>(),
-        showLogo: true,
+      appBar: PreferredSize(
+        preferredSize:
+            Size.fromHeight(CustomMediaQuery.makeHeight(context, .06)),
+        child: BlocBuilder<PageCubit, PageState>(
+          bloc: _pageCubit,
+          builder: (context, state) {
+            if (state is PageIndex) {
+              return CustomAppBar().call(
+                context,
+                title: state.pageIndex == 0 || state.pageIndex == 2
+                    ? youtubeTitle
+                    : 'Upload Video',
+                isHome: state.pageIndex == 0 || state.pageIndex == 2,
+                allVideosCubit: context.read<AllVideosCubit>(),
+                showLogo: state.pageIndex == 0 || state.pageIndex == 2,
+              );
+            }
+
+            return Container();
+          },
+        ),
       ),
       bottomNavigationBar: BottomBarDoubleBullet(
           color: white,
@@ -77,4 +92,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-

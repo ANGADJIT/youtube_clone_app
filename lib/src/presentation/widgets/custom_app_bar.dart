@@ -46,11 +46,7 @@ class CustomAppBar {
                 FontAwesomeIcons.youtube,
                 color: red,
                 size: CustomMediaQuery.makeSize(context, .4),
-              ).onTap(() {
-                CacheManager.deleteToken();
-
-                context.nextAndRemoveUntilPage(const IntroPage());
-              })
+              )
             : Container(),
         showLogo
             ? CustomMediaQuery.makeWidth(context, .01).widthBox
