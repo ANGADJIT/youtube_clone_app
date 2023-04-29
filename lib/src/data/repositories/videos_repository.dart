@@ -58,4 +58,22 @@ class VideosRepository {
 
     return right(videos);
   }
+
+  Future<Either<ServerException, List<Video>>> getRecommendations(
+      String videoType) async {
+    List<Video> videos = [];
+
+    try {
+      final String body = await _videosApi.recommendations(videoType);
+      final rawVideos = jsonDecode(body);
+
+      for (var video in rawVideos) {
+        videos.add(Video.fromMap(video));
+      }
+    } catch (e) {
+      return left(ServerException(e.toString()));
+    }
+
+    return right(videos);
+  }
 }

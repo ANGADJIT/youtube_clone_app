@@ -152,7 +152,17 @@ class _VideoDetailsState extends State<VideoDetails> {
               }
 
               return '0'.text.light.color(darkGray).makeCentered();
-            })
+            }),
+
+        const Spacer(),
+        TextButton(
+            onPressed: _showDescriptionBox,
+            child: 'more..'
+                .text
+                .bold
+                .color(white)
+                .size(CustomMediaQuery.makeTextSize(context, .34))
+                .make())
       ])
     ]).px(CustomMediaQuery.makeWidth(context, .02)))
         .color(darkGray)
@@ -188,5 +198,42 @@ class _VideoDetailsState extends State<VideoDetails> {
     // ignore: use_build_context_synchronously
     CommonWidgets.showSnackbar(context, message: 'Subscribed');
     setState(() {});
+  }
+
+  void _showDescriptionBox() async {
+    await showModalBottomSheet(
+        backgroundColor: black,
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: VxBox(
+                    child: VStack([
+              CustomMediaQuery.makeHeight(context, .02).heightBox,
+              widget.video.videoName.text.bold
+                  .color(white)
+                  .headline6(context)
+                  .make(),
+
+              //
+              Divider(
+                color: white,
+              ),
+              widget.video.videoDescription.text
+                  .color(white)
+                  .semiBold
+                  .headline5(context)
+                  .align(TextAlign.left)
+                  .make(),
+              CustomMediaQuery.makeHeight(context, .02).heightBox,
+              CustomMediaQuery.makeHeight(context, .4).heightBox
+            ]))
+                .color(black)
+                .border(color: white)
+                .width(CustomMediaQuery.makeWidth(context, 1.0))
+                .topRounded(value: CustomMediaQuery.makeRadius(context, .5))
+                .make()
+                .px(CustomMediaQuery.makeWidth(context, .02)),
+          );
+        });
   }
 }

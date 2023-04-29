@@ -267,4 +267,26 @@ class VideosApi extends BaseApi {
 
     return count;
   }
+
+  Future<String> recommendations(String videoType) async {
+    String body = '';
+
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      final Response response = await get(
+        route: '$majorRoute/recommendations/$videoType',
+        headers: headers,
+        isDepended: true,
+      );
+
+      if (response.statusCode == 200) {
+        body = jsonEncode(response.data);
+      }
+    } catch (e) {
+      throw ServerException('Something went wrong');
+    }
+
+    return body;
+  }
 }

@@ -2,11 +2,11 @@
     package="com.angadjit.youtube_clone.youtube_clone_app">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="youtube_clone_app"
+        android:label="Youtube Clone"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

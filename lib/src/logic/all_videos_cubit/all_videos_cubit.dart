@@ -32,4 +32,11 @@ class AllVideosCubit extends Cubit<AllVideosState> {
     result.fold((e) => emit(AllVideosError(serverException: e)),
         (videos) => emit(AllVideosLoaded(videos: videos)));
   }
+
+  void getRecommendations(String videoType) async {
+    final result = await _videosRepository.getRecommendations(videoType);
+
+    result.fold((e) => emit(AllVideosError(serverException: e)),
+        (videos) => emit(AllVideosLoaded(videos: videos)));
+  }
 }
