@@ -212,4 +212,24 @@ class VideosApi extends BaseApi {
 
     return isSubscribed;
   }
+
+  Future<int> getSubscribtionCount(String userId) async {
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    int count = 0;
+
+    try {
+      final Response response = await get(
+          route: '$majorRoute/get_subscription_count/$userId',
+          headers: headers);
+
+      if (response.statusCode == 200) {
+        count = response.data['count'];
+      }
+    } on DioError catch (e) {
+      throw ServerException(e.toString());
+    }
+
+    return count;
+  }
 }
