@@ -20,8 +20,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final PageCubit _pageCubit = PageCubit();
-
   final _pages = [
     const VideosPage(),
     const UploadPage(),
@@ -29,21 +27,15 @@ class _HomeState extends State<Home> {
   ];
 
   @override
-  void dispose() {
-    _pageCubit.close();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: black,
       appBar: PreferredSize(
         preferredSize:
             Size.fromHeight(CustomMediaQuery.makeHeight(context, .06)),
         child: BlocBuilder<PageCubit, PageState>(
-          bloc: _pageCubit,
+          bloc: context.read<PageCubit>(),
           builder: (context, state) {
             if (state is PageIndex) {
               return CustomAppBar().call(
@@ -61,26 +53,35 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
-      bottomNavigationBar: BottomBarDoubleBullet(
-          color: white,
-          backgroundColor: black,
-          onSelect: (index) {
-            _pageCubit.changePage(index);
-          },
-          height: CustomMediaQuery.makeHeight(context, .04),
-          items: [
-            BottomBarItem(
-              iconData: Icons.home,
-            ),
-            BottomBarItem(
-              iconData: Icons.add_rounded,
-            ),
-            BottomBarItem(
-              iconData: Icons.library_add_check,
-            ),
-          ]),
+      bottomNavigationBar: BlocBuilder<PageCubit, PageState>(
+        builder: (context, state) {
+          if (state is PageIndex) {
+            return BottomBarDoubleBullet(
+                selectedIndex: state.pageIndex,
+                color: white,
+                backgroundColor: black,
+                onSelect: (index) {
+                  context.read<PageCubit>().changePage(index);
+                },
+                height: CustomMediaQuery.makeHeight(context, .04),
+                items: [
+                  BottomBarItem(
+                    iconData: Icons.home,
+                  ),
+                  BottomBarItem(
+                    iconData: Icons.add_rounded,
+                  ),
+                  BottomBarItem(
+                    iconData: Icons.library_add_check,
+                  ),
+                ]);
+          }
+
+          return Container();
+        },
+      ),
       body: BlocBuilder<PageCubit, PageState>(
-        bloc: _pageCubit,
+        bloc: context.read<PageCubit>(),
         builder: (context, state) {
           if (state is PageIndex) {
             return _pages.elementAt(state.pageIndex);

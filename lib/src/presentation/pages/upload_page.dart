@@ -167,7 +167,9 @@ class _UploadPageState extends State<UploadPage> {
 
     CustomLoading.dismiss();
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   bool _validate() {
