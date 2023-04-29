@@ -177,4 +177,39 @@ class VideosApi extends BaseApi {
 
     return body;
   }
+
+  Future<void> subscribe(String userId) async {
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      await post(
+          route: '$majorRoute/subscribe/$userId',
+          headers: headers,
+          data: {},
+          isDepended: true);
+    } on DioError catch (e) {
+      if (e.response!.statusCode == conflict) {
+        throw ServerException('Already subscribed');
+      }
+    }
+  }
+
+  Future<bool> checkSubscribtion(String userId) async {
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    bool isSubscribed = false;
+
+    try {
+      final Response response = await get(
+          route: '$majorRoute/check_subscription/$userId', headers: headers);
+
+      if (response.statusCode == 200) {
+        isSubscribed = response.data['is_subscribed'];
+      }
+    } on DioError catch (e) {
+      throw ServerException(e.toString());
+    }
+
+    return isSubscribed;
+  }
 }
