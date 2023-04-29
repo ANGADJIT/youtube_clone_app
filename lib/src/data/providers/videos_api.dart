@@ -232,4 +232,39 @@ class VideosApi extends BaseApi {
 
     return count;
   }
+
+  Future<void> like(String videoId) async {
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    try {
+      await post(
+          route: '$majorRoute/like/$videoId',
+          headers: headers,
+          data: {},
+          isDepended: true);
+    } on DioError catch (e) {
+      if (e.response!.statusCode == conflict) {
+        throw ServerException('Already liked the video');
+      }
+    }
+  }
+
+  Future<int> getLikesCount(String videoId) async {
+    final Map<String, dynamic> headers = {'accept': 'application/json'};
+
+    int count = 0;
+
+    try {
+      final Response response =
+          await get(route: '$majorRoute/likes/$videoId', headers: headers);
+
+      if (response.statusCode == 200) {
+        count = response.data['likes'];
+      }
+    } on DioError catch (e) {
+      throw ServerException(e.toString());
+    }
+
+    return count;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:youtube_clone_app/src/data/models/video.dart';
 import 'package:youtube_clone_app/src/data/providers/videos_api.dart';
@@ -48,6 +49,7 @@ class _VideoDetailsState extends State<VideoDetails> {
               return snapshot.data!.text
                   .size(CustomMediaQuery.makeSize(context, .2))
                   .color(white)
+                  .light
                   .semiBold
                   .make();
             }
@@ -55,6 +57,43 @@ class _VideoDetailsState extends State<VideoDetails> {
             return Container();
           }),
         ),
+
+        // total subscribers
+        CustomMediaQuery.makeWidth(context, .02).widthBox,
+        FutureBuilder<int>(
+          future: _videosApi.getSubscribtionCount(widget.video.userId),
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              VxBox()
+                  .size(CustomMediaQuery.makeWidth(context, .1),
+                      CustomMediaQuery.makeHeight(context, .01))
+                  .color(darkGray)
+                  .make()
+                  .shimmer(showAnimation: true);
+            }
+
+            if (snapshot.hasData) {
+              if (snapshot.data! >= 1000) {
+                return '${snapshot.data! / 1000}K'
+                    .text
+                    .size(CustomMediaQuery.makeSize(context, .1))
+                    .color(gray)
+                    .light
+                    .make();
+              }
+
+              return '${snapshot.data!}'
+                  .text
+                  .size(CustomMediaQuery.makeSize(context, .1))
+                  .color(gray)
+                  .light
+                  .make();
+            }
+
+            return Container();
+          }),
+        ),
+
         const Spacer(),
         // subscribe button
         VxBox(
@@ -87,11 +126,52 @@ class _VideoDetailsState extends State<VideoDetails> {
             .height(CustomMediaQuery.makeHeight(context, .037))
             .width(CustomMediaQuery.makeWidth(context, .2))
             .make()
+      ]),
+
+      // like button
+      CustomMediaQuery.makeHeight(context, .01).heightBox,
+      HStack([
+        IconButton(
+            onPressed: () => _likeVideo(widget.video.id),
+            icon: FaIcon(
+              Icons.thumb_up_alt_outlined,
+              color: white,
+            )),
+        CustomMediaQuery.makeWidth(context, .02).widthBox,
+
+        //
+        FutureBuilder(
+            future: _videosApi.getLikesCount(widget.video.id),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return '${snapshot.data!}'
+                    .text
+                    .size(CustomMediaQuery.makeSize(context, .2))
+                    .color(gray)
+                    .make();
+              }
+
+              return '0'.text.light.color(darkGray).makeCentered();
+            })
       ])
     ]).px(CustomMediaQuery.makeWidth(context, .02)))
         .color(darkGray)
         .width(CustomMediaQuery.makeWidth(context, 1.0))
         .makeCentered();
+  }
+
+  Future<void> _likeVideo(String videoId) async {
+    CustomLoading.showLoading(context);
+
+    try {
+      await _videosApi.like(videoId);
+    } catch (e) {
+      CommonWidgets.showSnackbar(context, message: 'Already Liked the video');
+    }
+
+    CustomLoading.dismiss();
+
+    setState(() {});
   }
 
   Future<void> _subscribe() async {

@@ -23,7 +23,7 @@ class _WatchVideoState extends State<WatchVideo> {
           .call(context, title: widget.video.videoName, isHome: false),
       body: VStack([
         // playable video
-        // CustomVideoPlayer(video: widget.video),
+        CustomVideoPlayer(video: widget.video),
 
         // details
         VideoDetails(video: widget.video)
