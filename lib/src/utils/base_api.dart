@@ -1,16 +1,24 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:dio/dio.dart';
 import 'cache_manager.dart';
 
 class BaseApi {
-  final Dio _dio = Dio(BaseOptions(baseUrl: FlutterConfig.get('API_URL')));
+  final Dio _dio =
+      Dio(BaseOptions(baseUrl: 'http://${CacheManager.apiHost}:8000/'));
+
+  // status codes
+  final int created = 201;
+  final int sucessful = 200;
+  final int forbidden = 403;
+  final int internalServer = 500;
+  final int conflict = 409;
 
   @protected
   Future<Response> get(
       {required String route,
       required Map<String, dynamic> headers,
+      Map<String, dynamic>? queryParameters,
       bool isDepended = true}) async {
     if (isDepended) {
       headers['authorization'] = 'Bearer ${CacheManager.token}';
@@ -18,7 +26,7 @@ class BaseApi {
 
     _dio.options.headers = headers;
 
-    return await _dio.get(route);
+    return await _dio.get(route, queryParameters: queryParameters);
   }
 
   @protected
@@ -27,10 +35,11 @@ class BaseApi {
       required Map<String, dynamic> headers,
       File? file,
       bool isForm = false,
+      Map<String, dynamic>? params,
       Map<String, dynamic>? data,
       bool isDepended = true}) async {
     if (isDepended) {
-      headers['authorization'] = CacheManager.token;
+      headers['authorization'] = 'Bearer ${CacheManager.token}';
     }
 
     FormData? formData;
@@ -44,9 +53,9 @@ class BaseApi {
     _dio.options.headers = headers;
 
     if (isForm) {
-      _dio.post(route, data: formData);
+      return _dio.post(route, data: formData, queryParameters: params);
     }
 
-    return _dio.post(route, data: data);
+    return _dio.post(route, data: data, queryParameters: params);
   }
 }

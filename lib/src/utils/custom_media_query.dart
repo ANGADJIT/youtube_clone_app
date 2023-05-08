@@ -19,4 +19,7 @@ class CustomMediaQuery {
 
   static double makeTextSize(BuildContext context, double percentage) =>
       (context.screenWidth / 10) * percentage;
+
+  static double makeSize(BuildContext context, double percentage) =>
+      (context.screenWidth / 5) * percentage;
 }
