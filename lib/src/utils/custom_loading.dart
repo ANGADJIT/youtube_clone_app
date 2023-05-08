@@ -17,7 +17,7 @@ class CustomLoading {
       _overlayEntry = OverlayEntry(
           builder: (context) => Positioned(
               top: CustomMediaQuery.makeHeight(context, .5),
-              left: CustomMediaQuery.makeWidth(context, .5),
+              left: CustomMediaQuery.makeWidth(context, .45),
               child: CircularProgressIndicator(
                 strokeWidth: 3.4,
                 color: red,
@@ -30,6 +30,7 @@ class CustomLoading {
   static void dismiss() {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
+      _overlayEntry = null;
     }
   }
 }
